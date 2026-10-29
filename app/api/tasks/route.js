@@ -1,14 +1,25 @@
 import client from "@/lib/mongodb";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../lib/auth";
 
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user?.email) {
+      return Response.json(
+        { error: "Please sign in first" },
+        { status: 401 }
+      );
+    }
+
     await client.connect();
 
     const db = client.db("Task-Manager");
 
     const tasks = await db
       .collection("tasks")
-      .find({})
+      .find({ userEmail: session.user.email })
       .toArray();
 
     return Response.json(tasks);
@@ -22,8 +33,20 @@ export async function GET() {
   }
 }
 
+// Backend pehle poochta hai “kaun login hai?” (getServerSession).
+// .find({ userEmail: session.user.email }), yani sirf us user ke tasks aayenge.
+
 export async function POST(request) {
   try {
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user?.email) {
+      return Response.json(
+        { error: "Please sign in first" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     if (!body.title || typeof body.title !== "string" || !body.title.trim()) {
@@ -41,6 +64,7 @@ export async function POST(request) {
       title: body.title.trim(),
       completed: false,
       createdAt: new Date(),
+      userEmail: session.user.email,
     };
 
     const result = await db

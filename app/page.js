@@ -9,7 +9,8 @@ import {
 } from "../services/taskService";
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
@@ -23,6 +24,11 @@ export default function Home() {
   const [filter, setFilter] = useState("All");
 
   const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
+useEffect(() => {
+  console.log("Session:", session);
+}, [session]);
 
   const { data: tasks = [], isLoading, isError } = useQuery({
     queryKey: ["tasks"],
@@ -91,7 +97,25 @@ export default function Home() {
         <p className="mb-6 text-sm text-slate-500">
           Manage your daily tasks easily.
         </p>
-
+<div className="mb-6">
+  {session ? (
+    <button
+      type="button"
+      onClick={() => signOut()}
+      className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white"
+    >
+      Sign Out ({session.user.name})
+    </button>
+  ) : (
+    <button
+      type="button"
+      onClick={() => signIn("github")}
+      className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white"
+    >
+      Sign In with GitHub
+    </button>
+  )}
+</div>
         <form
           className="mb-2 flex gap-2"
           onSubmit={(e) => {

@@ -1,4 +1,3 @@
-
 export async function fetchTasks() {
   const res = await fetch("/api/tasks");
 
@@ -44,8 +43,6 @@ export async function updateTask(task) {
   return res.json();
 }
 
-
-
 export async function editTask(id, title) {
   const res = await fetch(`/api/tasks/${id}`, {
     method: "PUT",
@@ -61,4 +58,3 @@ export async function editTask(id, title) {
 
   return res.json();
 }
-
