@@ -79,14 +79,7 @@ useEffect(() => {
       </div>
     );
 
-  if (isError)
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white p-6">
-        <p className="rounded-xl border border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-600 shadow-sm">
-          Failed to load tasks. Check your API.
-        </p>
-      </div>
-    );
+  
 
   return (
     <div className="min-h-screen bg-blue-950 px-3 py-6 sm:px-4 sm:py-10">
@@ -97,6 +90,11 @@ useEffect(() => {
         <p className="mb-6 text-sm text-slate-500">
           Manage your daily tasks easily.
         </p>
+        {isError && (
+  <p className="mb-4 text-sm font-medium text-red-600">
+    Failed to load tasks. Please sign in or check your API.
+  </p>
+)}
 <div className="mb-6">
   {session ? (
     <button
