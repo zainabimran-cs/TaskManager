@@ -1,8 +1,13 @@
 export async function fetchTasks() {
   const res = await fetch("/api/tasks");
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch tasks");
+  // if (!res.ok) {
+  //   throw new Error("Failed to fetch tasks");
+  // }
+
+  if(!res.ok){
+    const error = await res.json();
+    throw new Error(error.error);
   }
 
   return res.json();
@@ -16,7 +21,8 @@ export async function addTask(title) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to add task");
+   const error = await res.json();
+   throw new Error(error.error);
   }
 
   return res.json();
@@ -28,7 +34,8 @@ export async function deleteTask(id) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to delete task");
+    const error = await res.json();
+    throw new Error(error.error);
   }
 }
 
@@ -39,7 +46,10 @@ export async function updateTask(task) {
     body: JSON.stringify({ completed: !task.completed }),
   });
 
-  if (!res.ok) throw new Error("Failed to update task");
+  if (!res.ok){
+    const error = await res.json();
+    throw new Error(error.error); 
+  }
   return res.json();
 }
 
@@ -53,7 +63,8 @@ export async function editTask(id, title) {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to edit task");
+    const error =await res.json();
+    throw new Error(error.error);
   }
 
   return res.json();

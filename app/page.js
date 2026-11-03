@@ -30,7 +30,7 @@ useEffect(() => {
   console.log("Session:", session);
 }, [session]);
 
-  const { data: tasks = [], isLoading, isError } = useQuery({
+  const { data: tasks = [], isLoading, isError, error } = useQuery({
     queryKey: ["tasks"],
     queryFn: fetchTasks,
   });
@@ -92,7 +92,7 @@ useEffect(() => {
         </p>
         {isError && (
   <p className="mb-4 text-sm font-medium text-red-600">
-    Failed to load tasks. Please sign in or check your API.
+   {error.message}
   </p>
 )}
 <div className="mb-6">
@@ -151,7 +151,7 @@ useEffect(() => {
         )}
         {addMutation.isError && (
           <p className="mb-2 text-sm font-medium text-red-600">
-            Could not add task.
+         {addMutation.error.message}
           </p>
         )}
 
@@ -162,6 +162,22 @@ useEffect(() => {
           </span>
         </div>
 
+{/* Delete error */}
+        {deleteMutation.isError && (
+          <p className="font-medium text-red-600 mb-2 text-sm">
+            {deleteMutation.error.message}
+          </p>
+        )}
+
+{/* update error */}
+        {updateMutation.isError && (
+          <p className="font-medium text-red-600 mb-2 text-sm">
+            {updateMutation.error.message}
+          </p>
+        )}
+
+
+{/* filter */}
         <div className="mb-4 flex gap-2">
           {["All", "Active", "Done"].map((item) => (
             <button
@@ -224,7 +240,7 @@ useEffect(() => {
                       )}
                       {editMutation.isError && (
                         <span className="mt-1 block text-xs font-medium text-red-600 no-underline">
-                          Could not edit task. Please try again.
+                         {editMutation.error.message}
                         </span>
                       )}
                     </>
