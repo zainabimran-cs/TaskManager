@@ -1,13 +1,13 @@
+async function handleError(res, fallback) {
+  const data = await res.json().catch(()=>null);
+  throw new Error(data?.error || fallback);
+}
+
 export async function fetchTasks() {
   const res = await fetch("/api/tasks");
 
-  // if (!res.ok) {
-  //   throw new Error("Failed to fetch tasks");
-  // }
-
   if(!res.ok){
-    const error = await res.json();
-    throw new Error(error.error);
+    await handleError(res, "Failed to load tasks");
   }
 
   return res.json();
@@ -21,8 +21,7 @@ export async function addTask(title) {
   });
 
   if (!res.ok) {
-   const error = await res.json();
-   throw new Error(error.error);
+  await handleError(res, "Failed to add task");
   }
 
   return res.json();
@@ -34,8 +33,7 @@ export async function deleteTask(id) {
   });
 
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error);
+    await handleError(res, "Failed to delete task");
   }
 }
 
@@ -47,8 +45,7 @@ export async function updateTask(task) {
   });
 
   if (!res.ok){
-    const error = await res.json();
-    throw new Error(error.error); 
+    await handleError(res, "Failed to update task"); 
   }
   return res.json();
 }
@@ -63,8 +60,7 @@ export async function editTask(id, title) {
   });
 
   if (!res.ok) {
-    const error =await res.json();
-    throw new Error(error.error);
+   await handleError(res, "Failed to edit task");
   }
 
   return res.json();
