@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useTasks } from "../Hooks/useTasks";
+import { useTasks } from "../hooks/useTasks";
 import TaskForm from "../components/TaskForm";
 import TaskFilter from "../components/TaskFilter";
 import TaskList from "../components/TaskList";
