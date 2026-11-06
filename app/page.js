@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useTasks } from "../hooks/useTasks";
 import TaskForm from "../components/TaskForm";
@@ -8,7 +7,7 @@ import TaskFilter from "../components/TaskFilter";
 import TaskList from "../components/TaskList";
 
 export default function Home() {
-  const { data: session } = useSession();
+ const { data: session, status } = useSession();
   const {
     filteredTasks,
     isLoading,
@@ -30,21 +29,33 @@ export default function Home() {
     updateMutation,
     deleteMutation,
     editMutation,
-  } = useTasks();
+  } = useTasks(status);
 
-  useEffect(() => {
-    console.log("Session:", session);
-  }, [session]);
 
-  if (isLoading)
+  
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <p className="text-sm font-medium text-slate-600">
+          Checking authentication...
+        </p>
+      </div>
+    );
+  }
+
+  if (status === "authenticated" && isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="flex items-center gap-3 rounded-full bg-white px-6 py-3 shadow-md">
           <span className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
-          <p className="text-sm font-medium text-slate-600">Loading tasks...</p>
+          <p className="text-sm font-medium text-slate-600">
+            Loading tasks...
+          </p>
         </div>
       </div>
     );
+  }
+
 
   return (
     <div className="min-h-screen bg-blue-950 px-3 py-6 sm:px-4 sm:py-10">

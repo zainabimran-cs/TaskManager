@@ -8,7 +8,7 @@ import {
     editTask,
 } from "../services/taskService";
 
-export  function useTasks() {
+export  function useTasks(status) {
 const [input, setInput] = useState("");
   const [validationError, setValidationError] = useState("");
 
@@ -23,6 +23,7 @@ const [input, setInput] = useState("");
     const { data: tasks = [], isLoading, isError, error } = useQuery({
         queryKey: ["tasks"],
         queryFn: fetchTasks,
+        enabled: status === "authenticated",
     });
 
     const filteredTasks = tasks.filter((task) => {
@@ -61,15 +62,15 @@ const [input, setInput] = useState("");
 
 
     return {
-         // data
+     
     tasks, filteredTasks, isLoading, isError, error,
-    // filter
+
     filter, setFilter,
-    // add form
+ 
     input, setInput, validationError, setValidationError,
-    // edit state
+    
     editingId, setEditingId, editTitle, setEditTitle, editError, setEditError,
-    // mutations
+  
     addMutation, updateMutation, deleteMutation, editMutation,
     }
 }
